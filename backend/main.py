@@ -26,6 +26,11 @@ def health_check():
     return {"status": "ok"}
 
 
+@app.get("/")
+def root():
+    return {"message": "Portfolio AI backend is running", "health": "/health", "chat": "/api/chat"}
+
+
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(payload: ChatRequest, db: Session = Depends(get_db)):
     db.add(ChatMessage(role="user", content=payload.question))
