@@ -82,25 +82,40 @@ This reflects a builder mindset rather than purely exam-oriented learning.
 - Wants to improve interview communication and articulation
 
 ## Technical Skills
-### Programming
-- Primary: C++ (DSA and problem solving)
-- JavaScript (frontend and projects)
-- Basic backend understanding
+### Languages
+- C
+- C++
+- JavaScript
+- TypeScript
+- SQL
 
-### Web Development (Frontend)
+### Frontend
 - React.js
+- Next.js
+- Tailwind CSS
+- shadcn/ui
 - HTML
 - CSS
 - Flexbox and Grid
 - Responsive UI thinking
-- Conceptual clarity in layout and component systems
-- Margin vs Padding, Div vs Span, layout systems, component-based design
 
-### Backend And Full-Stack Exposure
-- Node.js (basic exposure)
-- REST API integration
+### Backend
+- Node.js
+- Express.js
+- RESTful API development
 - Authentication flows
 - Dashboard architecture thinking
+
+### Databases
+- MongoDB
+- PostgreSQL
+
+### DevOps And Tools
+- Git/GitHub
+- Docker
+- Postman
+- Linux Shell
+- Vercel
 
 ### AI And ML Interest
 - Neural network regression experiments

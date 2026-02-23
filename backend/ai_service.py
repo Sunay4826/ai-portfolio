@@ -84,6 +84,13 @@ def _is_github_question(question: str) -> bool:
     return has_github and any(k in q for k in ["url", "link", "profile", "id", "give"])
 
 
+def _is_skills_projects_question(question: str) -> bool:
+    q = question.lower()
+    has_skills = any(k in q for k in ["technical skills", "skills", "tech stack", "languages"])
+    has_projects = any(k in q for k in ["major projects", "projects", "project name"])
+    return has_skills and has_projects
+
+
 def _extract_top_technologies(resume_text: str) -> List[tuple[str, int]]:
     tech_aliases = {
         "react": "React",
@@ -241,6 +248,36 @@ def _build_github_answer(resume_text: str) -> str:
     return "\n".join(lines)
 
 
+def _extract_section(resume_text: str, section_name: str) -> str:
+    lines = resume_text.splitlines()
+    capture = False
+    out: List[str] = []
+    target = f"## {section_name}".lower()
+    for line in lines:
+        if line.strip().lower() == target:
+            capture = True
+            out.append(line)
+            continue
+        if capture and line.startswith("## "):
+            break
+        if capture:
+            out.append(line)
+    return "\n".join(out).strip()
+
+
+def _build_skills_projects_answer(resume_text: str) -> str:
+    skills = _extract_section(resume_text, "Technical Skills")
+    projects = _extract_section(resume_text, "Major Projects")
+    if not skills and not projects:
+        return "Technical skills and major projects are not clearly listed in the profile."
+    parts = []
+    if skills:
+        parts.append(skills)
+    if projects:
+        parts.append(projects)
+    return "\n\n".join(parts)
+
+
 async def answer_resume_question(question: str) -> tuple[str, str]:
     resume_text = _load_resume()
     context = _simple_retrieve(question, resume_text)
@@ -264,6 +301,8 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
         "Give a factual answer based only on context."
     )
 
+    if _is_skills_projects_question(question):
+        return (_build_skills_projects_answer(resume_text), "deterministic-skill-project-parser")
     if _is_technology_question(question):
         return (_build_technology_answer(resume_text), "deterministic-skill-parser")
     if _is_backend_question(question):
@@ -288,7 +327,7 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0.2,
-            "max_tokens": 350,
+            "max_tokens": 900,
         }
 
         try:
@@ -329,7 +368,7 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
         gemini_payload = {
             "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
             "systemInstruction": {"parts": [{"text": system_prompt}]},
-            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 350},
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 900},
         }
         async with httpx.AsyncClient(timeout=30.0) as client:
             last_error = ""
