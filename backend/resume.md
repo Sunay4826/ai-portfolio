@@ -161,9 +161,21 @@ Sunay is highly serious about DSA.
 - Dataset: MovieLens
 - Approach: user-item matrix
 - Interface: CLI with possible Streamlit UI
+- Deployed: https://movie-recommendation-system86.streamlit.app
 - Demonstrates: data handling, recommendation logic, ML exposure
 
-### 4) Dataset Selection Using ML
+### 4) AI Deterministic UI Generator
+- Deployed: https://uiaiagent.vercel.app/agent
+- Chat route: https://uiaiagent.vercel.app/chat
+- GitHub: https://github.com/Sunay4826/UI_Agent/tree/main
+- Stack: React frontend + Hono backend on Cloudflare Workers
+- Core idea: Claude-code-style deterministic UI generation with strict component schema enforcement
+- Agent flow: injection guard -> intent classifier -> planner -> deterministic normalizer -> generator -> validators -> explainer
+- Supports: iterative modification, deterministic regeneration, version history, rollback
+- Safety: prompt injection filtering, plan validation, prop validation, code validation
+- LLM setup: Gemini-based configuration with optional fallback mode
+
+### 5) Dataset Selection Using ML
 - Focus: ML-driven decision making
 - Demonstrates: practical ML experimentation
 
@@ -302,6 +314,8 @@ Agent memory should preserve:
 - Project links and deployed apps
 - GitHub profile: https://github.com/Sunay4826
 - GitHub repositories
+- Project repository: https://github.com/Sunay4826/Blog
+- Project repository: https://github.com/Sunay4826/UI_Agent/tree/main
 - Internship application context
 
 ## Behaviour Under Pressure
