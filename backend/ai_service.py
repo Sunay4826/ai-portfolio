@@ -60,7 +60,15 @@ def _is_technology_question(question: str) -> bool:
         return True
     if "strongest" in q and ("tech" in q or "technology" in q or "technologies" in q):
         return True
-    triggers = ["skills", "frameworks", "languages", "tools"]
+    # Keep this scoped to technical-skill intent, not soft-skill intent.
+    triggers = [
+        "technical skills",
+        "frameworks",
+        "languages",
+        "tools",
+        "frontend stack",
+        "backend stack",
+    ]
     return any(t in q for t in triggers)
 
 
@@ -82,6 +90,20 @@ def _is_github_question(question: str) -> bool:
     q = question.lower()
     has_github = "github" in q or "git hub" in q
     return has_github and any(k in q for k in ["url", "link", "profile", "id", "give"])
+
+
+def _is_softskills_question(question: str) -> bool:
+    q = question.lower()
+    soft_terms = [
+        "communication",
+        "leadership",
+        "soft skills",
+        "team collaboration",
+        "time management",
+        "critical thinking",
+        "adaptability",
+    ]
+    return any(term in q for term in soft_terms)
 
 
 def _is_skills_projects_question(question: str) -> bool:
@@ -278,6 +300,35 @@ def _build_skills_projects_answer(resume_text: str) -> str:
     return "\n\n".join(parts)
 
 
+def _build_softskills_answer(resume_text: str) -> str:
+    soft_section = _extract_section(resume_text, "Personality And Work Traits")
+    interview_section = _extract_section(resume_text, "Interview Behaviour Prediction")
+    relevant = []
+    for line in (soft_section + "\n" + interview_section).splitlines():
+        low = line.lower()
+        if any(
+            k in low
+            for k in [
+                "communication",
+                "leadership",
+                "team collaboration",
+                "critical thinking",
+                "adaptability",
+                "structured storytelling",
+                "nervous explanation",
+            ]
+        ):
+            cleaned = line.strip("- ").strip()
+            if cleaned:
+                relevant.append(cleaned)
+    relevant = list(dict.fromkeys(relevant))[:8]
+    if not relevant:
+        return "Communication and leadership details are not clearly listed in the profile."
+    return "Sunay's communication and leadership profile:\n" + "\n".join(
+        [f"- {item}" for item in relevant]
+    )
+
+
 async def answer_resume_question(question: str) -> tuple[str, str]:
     resume_text = _load_resume()
     context = _simple_retrieve(question, resume_text)
@@ -303,6 +354,8 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
 
     if _is_skills_projects_question(question):
         return (_build_skills_projects_answer(resume_text), "deterministic-skill-project-parser")
+    if _is_softskills_question(question):
+        return (_build_softskills_answer(resume_text), "deterministic-softskills-parser")
     if _is_technology_question(question):
         return (_build_technology_answer(resume_text), "deterministic-skill-parser")
     if _is_backend_question(question):
