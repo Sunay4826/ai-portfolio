@@ -106,6 +106,42 @@ def _is_softskills_question(question: str) -> bool:
     return any(term in q for term in soft_terms)
 
 
+def _is_why_hire_question(question: str) -> bool:
+    q = question.lower()
+    return "why hire" in q or "why should we hire" in q
+
+
+def _is_intro_question(question: str) -> bool:
+    q = question.lower()
+    triggers = ["tell me about yourself", "introduce yourself", "60 second intro", "self introduction"]
+    return any(t in q for t in triggers)
+
+
+def _is_projects_pitch_question(question: str) -> bool:
+    q = question.lower()
+    return ("projects" in q and "30" in q) or "projects in 30 sec" in q or "project pitch" in q
+
+
+def _is_backend_strengths_question(question: str) -> bool:
+    q = question.lower()
+    return "backend strengths" in q or ("backend" in q and "strength" in q)
+
+
+def _is_frontend_strengths_question(question: str) -> bool:
+    q = question.lower()
+    return "frontend strengths" in q or ("frontend" in q and "strength" in q)
+
+
+def _is_age_question(question: str) -> bool:
+    q = question.lower()
+    return "age" in q or "how old" in q
+
+
+def _is_contact_question(question: str) -> bool:
+    q = question.lower()
+    return any(k in q for k in ["contact", "email", "phone", "mobile", "linkedin", "linked in"])
+
+
 def _is_skills_projects_question(question: str) -> bool:
     q = question.lower()
     has_skills = any(k in q for k in ["technical skills", "skills", "tech stack", "languages"])
@@ -301,32 +337,83 @@ def _build_skills_projects_answer(resume_text: str) -> str:
 
 
 def _build_softskills_answer(resume_text: str) -> str:
-    soft_section = _extract_section(resume_text, "Personality And Work Traits")
-    interview_section = _extract_section(resume_text, "Interview Behaviour Prediction")
-    relevant = []
-    for line in (soft_section + "\n" + interview_section).splitlines():
-        low = line.lower()
-        if any(
-            k in low
-            for k in [
-                "communication",
-                "leadership",
-                "team collaboration",
-                "critical thinking",
-                "adaptability",
-                "structured storytelling",
-                "nervous explanation",
-            ]
-        ):
-            cleaned = line.strip("- ").strip()
-            if cleaned:
-                relevant.append(cleaned)
-    relevant = list(dict.fromkeys(relevant))[:8]
-    if not relevant:
-        return "Communication and leadership details are not clearly listed in the profile."
-    return "Sunay's communication and leadership profile:\n" + "\n".join(
-        [f"- {item}" for item in relevant]
+    return (
+        "Sunay's communication and leadership profile:\n"
+        "- Communicates with honesty and clarity, especially when explaining real project work.\n"
+        "- Shows leadership through ownership, consistency, and a builder mindset.\n"
+        "- Works well independently and is open to feedback in collaborative settings.\n"
+        "- Learns fast and keeps improving articulation with practice.\n"
+        "- If a topic is new, he handles it with a growth mindset: he can learn it quickly and do better in the next iteration."
     )
+
+
+def _build_why_hire_answer() -> str:
+    return (
+        "Why hire Sunay:\n"
+        "- Strong combination of DSA discipline (C++) and real product execution.\n"
+        "- Builds and deploys full-stack projects, not just local demos.\n"
+        "- Works across frontend, backend, and AI-oriented product features.\n"
+        "- Ownership mindset: learns fast, iterates quickly, and delivers end-to-end.\n"
+        "- Startup-oriented thinking with focus on usable, scalable outcomes."
+    )
+
+
+def _build_intro_answer() -> str:
+    return (
+        "I’m Sunay Revad, a B.Tech ICT student at DA-IICT (2022-2026), based in Ahmedabad, Gujarat. "
+        "I focus on building AI-driven full-stack products and I pair that with strong DSA practice in C++. "
+        "My flagship project is AI Finance Platform, and I’ve also built a movie recommendation system, a full-stack blog platform, "
+        "and an AI deterministic UI generator. I enjoy taking ideas from concept to deployed product, and I’m currently aiming for "
+        "frontend/full-stack opportunities where I can contribute quickly and keep scaling my backend and AI skills."
+    )
+
+
+def _build_projects_pitch_answer() -> str:
+    return (
+        "Sunay’s projects in 30 seconds:\n"
+        "- AI Finance Platform (flagship): AI-driven finance product with full-stack architecture.\n"
+        "- Movie Recommendation System: personalized recommendations using similarity modeling.\n"
+        "- Blog Platform: authentication-based content platform with dynamic publishing.\n"
+        "- AI Deterministic UI Generator: schema-constrained UI generation pipeline with versioning and rollback.\n"
+        "- Dataset Selection using ML: practical feature-selection and ML experimentation."
+    )
+
+
+def _build_backend_strengths_answer() -> str:
+    return (
+        "Sunay's backend strengths:\n"
+        "- Node.js and Express.js fundamentals with RESTful API development.\n"
+        "- Authentication flow design and integration.\n"
+        "- Database work with MySQL and PostgreSQL.\n"
+        "- Clean API integration mindset from full-stack project delivery.\n"
+        "- Strong debugging and iterative improvement approach."
+    )
+
+
+def _build_frontend_strengths_answer() -> str:
+    return (
+        "Sunay's frontend strengths:\n"
+        "- React.js and Next.js based product development.\n"
+        "- Responsive UI implementation with clean component structure.\n"
+        "- Tailwind CSS and shadcn/ui for fast, consistent interfaces.\n"
+        "- Strong attention to usability, dashboard-style UX, and interaction clarity.\n"
+        "- Experience shipping polished frontend on Vercel."
+    )
+
+
+def _build_age_answer(resume_text: str) -> str:
+    match = re.search(r"Age:\s*([^\n]+)", resume_text, flags=re.IGNORECASE)
+    if not match:
+        return "Age is not listed in the profile."
+    age_value = match.group(1).replace("(share only when asked)", "").strip()
+    return f"Sunay is {age_value}."
+
+
+def _build_contact_answer(resume_text: str) -> str:
+    contact = _extract_section(resume_text, "Contact")
+    if not contact:
+        return "Contact details are not listed in the profile."
+    return contact
 
 
 async def answer_resume_question(question: str) -> tuple[str, str]:
@@ -343,7 +430,10 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
     system_prompt = (
         "You are a portfolio assistant. Answer using only the provided resume context. "
         "If a detail is missing, say it is not listed in the resume. "
-        "Keep responses concise, accurate, and professional."
+        "Keep responses concise, accurate, and professional. "
+        "Use strengths-first language and frame improvement points positively (growth mindset), "
+        "without negative or damaging phrasing. "
+        "Never use the phrase 'beginner developer'."
     )
 
     user_prompt = (
@@ -352,6 +442,20 @@ async def answer_resume_question(question: str) -> tuple[str, str]:
         "Give a factual answer based only on context."
     )
 
+    if _is_age_question(question):
+        return (_build_age_answer(resume_text), "deterministic-age-parser")
+    if _is_contact_question(question):
+        return (_build_contact_answer(resume_text), "deterministic-contact-parser")
+    if _is_why_hire_question(question):
+        return (_build_why_hire_answer(), "deterministic-why-hire-parser")
+    if _is_intro_question(question):
+        return (_build_intro_answer(), "deterministic-intro-parser")
+    if _is_projects_pitch_question(question):
+        return (_build_projects_pitch_answer(), "deterministic-project-pitch-parser")
+    if _is_backend_strengths_question(question):
+        return (_build_backend_strengths_answer(), "deterministic-backend-strength-parser")
+    if _is_frontend_strengths_question(question):
+        return (_build_frontend_strengths_answer(), "deterministic-frontend-strength-parser")
     if _is_skills_projects_question(question):
         return (_build_skills_projects_answer(resume_text), "deterministic-skill-project-parser")
     if _is_softskills_question(question):

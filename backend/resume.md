@@ -2,9 +2,18 @@
 
 ## Basic Identity
 - Name: Sunay Revad
-- Location: Gujarat, India
+- Age: 20 (share only when asked)
+- Location: Ahmedabad, Gujarat, India
 - Background: Engineering student with strong interest in software development, AI, and problem solving
 - Goal: Become a strong developer who builds real-world scalable products and cracks internships/startups
+- Headline: B.Tech ICT student building AI-driven full-stack products with strong DSA in C++
+- Professional Tagline: B.Tech ICT Student | Full-stack and AI Product Builder | Strong DSA in C++
+
+## Contact
+- Phone: +91 9023931646
+- Email: sunayrevad2005@gmail.com
+- LinkedIn: https://www.linkedin.com/in/sunay-revad8/
+- GitHub: https://github.com/Sunay4826
 
 ## Summary
 Sunay is not just learning theory. He actively builds projects, practices DSA, applies for internships, and experiments with AI product ideas. He has a builder mindset with interest in UI, backend, and AI-driven products.
@@ -107,7 +116,7 @@ This reflects a builder mindset rather than purely exam-oriented learning.
 - Dashboard architecture thinking
 
 ### Databases
-- MongoDB
+- MySQL
 - PostgreSQL
 
 ### DevOps And Tools
@@ -151,18 +160,18 @@ Sunay is highly serious about DSA.
 - Focus: UI + financial insight interaction
 - Demonstrates: deployable product delivery, UI design thinking, real-world problem solving
 
-### 2) Blog Platform
-- Live: https://blog-sbyr.vercel.app/signin
-- GitHub: https://github.com/Sunay4826/Blog
-- Features: authentication, blog creation and reading, full-stack structure
-- Demonstrates: full-stack capability, database interaction understanding, user flow design
-
-### 3) Movie Recommendation System
+### 2) Movie Recommendation System
 - Dataset: MovieLens
 - Approach: user-item matrix
 - Interface: CLI with possible Streamlit UI
 - Deployed: https://movie-recommendation-system86.streamlit.app
 - Demonstrates: data handling, recommendation logic, ML exposure
+
+### 3) Blog Platform
+- Live: https://blog-sbyr.vercel.app/signin
+- GitHub: https://github.com/Sunay4826/Blog
+- Features: authentication, blog creation and reading, full-stack structure
+- Demonstrates: full-stack capability, database interaction understanding, user flow design
 
 ### 4) AI Deterministic UI Generator
 - Deployed: https://uiaiagent.vercel.app/agent
