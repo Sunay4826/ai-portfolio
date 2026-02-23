@@ -2,6 +2,10 @@
 
 This project is an internship-ready personal portfolio website with AI chat functionality that answers user questions based on your resume.
 
+## Live Deployment
+- Frontend: https://ai-portfolio-five-alpha.vercel.app
+- Backend: https://ai-portfolio-xq5b.onrender.com
+
 ## Tech Stack
 - Frontend: React + TypeScript (Vite)
 - Backend: Python + FastAPI
